@@ -65,7 +65,7 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, '../data/files', 'favicon.ico')));
 
 //这里支持自定义数据格式 @link https://segmentfault.com/a/1190000007769095
-app.use(morgan('default'));
+app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
