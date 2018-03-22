@@ -53,4 +53,28 @@ User.prototype.save = function (callback) {
             })
         })
     })
+};
+//根据名称获取用户信息的get方法,登录
+User.get = function (name, callback) {
+    //1.打开数据库
+    mongo.open(function (err, db) {
+        //发生错误的时候
+        if (err) {
+            return callback(err);
+        }
+        //2.还是读取users集合
+        db.collection('users', function (err, collection) {
+            if (err) {
+                mongo.close();
+                return callback(err);
+            }
+            //查询用户名
+            collection.findOne({name: name}, function (err, user) {
+                if (err) {
+                    return callback(err);
+                }
+                callback(null, user);//成功返回查询的用户信息.
+            })
+        })
+    })
 }

@@ -1,4 +1,4 @@
-<% include header %>
+<% include header.ejs %>
 <% posts.forEach(function (post, index) { %>
 <p><h2><a href="/u/<%= post.name %>/<%= post.time.minute %>/<%= post.title %>"><%= post.title %></a></h2></p>
 <p class="info">

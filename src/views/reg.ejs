@@ -1,6 +1,6 @@
-<% include header %>
+<% include header.ejs %>
 <!--在这个里面，开始设计注册表单-->
-<form method="post">
+<form method="post" action="/user/reg">
     <label>用户:</label>
     <input type="text" name="name"></br>
     <label>密码:</label>
@@ -11,4 +11,4 @@
     <input type="email" name="email"></br>
     <input type="submit" value="注册">
 </form>
-<% include footer %>
+<% include footer.ejs %>

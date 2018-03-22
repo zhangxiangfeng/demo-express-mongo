@@ -6,24 +6,41 @@
 
 "use strict";
 
+//全局变量
+var logger;
 var local = "[Route]";
+var rid;
+
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//需要引入一个加密的模块
+var crypto = require('crypto');
+//引入multer插件
+var multer = require('multer');
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//引入日志记录插件
+var LOGGER = require("./Setting").Log4js;
+var uuidV4 = require('node-uuid');
+var Accessinterceptor = require('./core/interceptor/Accessinterceptor');
+const IndexRoute = require('./route/IndexRoute');
+const UserRoute = require('./route/UserRoute');
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<model>>>>>>>>>>>>>>>>>>>>>>>>>
 //登录和注册需要的User类
 var User = require('./model/User');
 //发表需要的Article类
 var Article = require('./model/Article');
 //引入留言需要的Comment类
 var Comment = require('./model/Comment');
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<model>>>>>>>>>>>>>>>>>>>>>>>>>
 
-var Accessinterceptor = require('./core/interceptor/Accessinterceptor');
-
-
-//需要引入一个加密的模块
-var crypto = require('crypto');
-//引入multer插件
-var multer = require('multer');
-//引入日志记录插件
-var LOGGER = require("./Setting").Log4js;
-var uuidV4 = require('node-uuid');
 
 //插件的配置信息
 var storage = multer.diskStorage({
@@ -60,151 +77,46 @@ function checkNotLogin(req, res, next) {
     next();
 }
 
-var logger;
 
 module.exports = function (app) {
 
-    //sept 1.这里匹配全局访问,加入访问控制拦截器
-    app.all('/*', function (req, res, next) {
-
-        var rid = uuidV4();
+    //这里匹配全局访问,加入访问控制拦截器
+    app.all('*', function (req, res, next) {
         //当前请求,分配uuid
+        rid = uuidV4();
         logger = LOGGER.getLogger(rid + " " + local);
         Accessinterceptor(app, rid, req, res, next);
     });
 
-
-    //sept 2.这里模糊匹配
-
-
-    //首页
-    app.get('/', function (req, res) {
-        logger.trace("日志跟踪:" + req.body);
-        var page = parseInt(req.query.p) || 1;
-        Article.getTen(null, page, function (err, posts, total) {
-            if (err) {
-                posts = [];
-            }
-            res.render('index', {
-                title: '首页',
-                user: req.session.user,
-                page: page,
-                posts: posts,
-                isFirstPage: (page - 1) === 0,
-                isLastPage: (page - 1) * 10 + posts.length === total,
-                success: req.flash('success').toString(),
-                error: req.flash('error').toString()
-            })
-        })
-
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<路由到首页路由>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    app.all("/", function (req, res, next) {
+        IndexRoute.index(req, res, rid);
     });
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<路由到首页路由>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<路由到用户路由>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     //注册页面
-    app.get('/reg', checkNotLogin);
-    app.get('/reg', function (req, res) {
-        res.render('reg', {
-            title: '注册',
-            user: req.session.user,
-            success: req.flash('success').toString(),
-            error: req.flash('error').toString()
-        })
+    app.get('/user/reg', function (req, res, next) {
+        UserRoute.reg(req, res, next, rid);
     });
+
     //注册行为
-    app.post('/reg', checkNotLogin);
-    app.post('/reg', function (req, res) {
-        //数据接收req.body
-        //console.log(req.body);
-        //用户名
-        var name = req.body.name;
-        //密码
-        var password = req.body.password;
-        //确认密码
-        var password_re = req.body['password-repeat'];
-        //邮箱
-        var email = req.body.email;
-        //补充一下，如果未填写的情况下，提示用户
-        if (name == '' || password == '' || password_re == '' || email == '') {
-            req.flash('error', '请正确填写信息');
-            return res.redirect('/reg');
-        }
-        //1.首先检查一下两次密码是否一样
-        if (password_re != password) {
-            //先保存一下当前的错误信息
-            req.flash('error', '用户两次输入的密码不一样');
-            return res.redirect('/reg');
-        }
-        //2.对密码进行加密处理
-        var md5 = crypto.createHash('md5');
-        var password = md5.update(req.body.password).digest('hex');
-        //console.log(password);
+    app.post('/user/reg', function (req, res, next) {
+        UserRoute.regAction(req, res, next, rid);
+    });
 
-        //3.可以开始实例化User对象了
-        var newUser = new User({
-            name: name,
-            password: password,
-            email: email
-        });
-        //4.检查用户名是否存在
-        User.get(newUser.name, function (err, user) {
-            //如果发生了错误,跳转回首页
-            if (err) {
-                req.flash('error', err);
-                return res.redirect('/');
-            }
-            //如果存在重复的用户名
-            if (user) {
-                req.flash('error', '用户名已经存在');
-                return res.redirect('/reg');
-            }
-            //正确情况下
-            newUser.save(function (err, user) {
-                if (err) {
-                    req.flash('error', err);
-                }
-                //用户信息存入session
-                req.session.user = newUser;
-                //console.log(req.session.user);
-                req.flash('success', '注册成功');
-                res.redirect('/');
-            })
-        })
+    //登录页面
+    app.get('/user/login', function (req, res, next) {
+        UserRoute.login(req, res, next, rid);
     });
-    //登录
-    app.get('/login', checkNotLogin);
-    app.get('/login', function (req, res) {
-        res.render('login', {
-            title: '登录',
-            user: req.session.user,
-            success: req.flash('success').toString(),
-            error: req.flash('error').toString()
-        })
-    });
+
     //登录行为
-    app.post('/login', checkNotLogin);
-    app.post('/login', function (req, res) {
-        //1.检查下用户名有没有
-        //2.检查下密码对不对
-        //3.存储到session中用户的登录信息
-        //4.跳转到首页
-        var md5 = crypto.createHash('md5');
-        var password = md5.update(req.body.password).digest('hex');
-        User.get(req.body.name, function (err, user) {
-            if (!user) {
-                //说明用户名不存在
-                req.flash('error', '用户名不存在');
-                return res.redirect('/login');
-            }
-            //检查两次密码是否一样
-            if (user.password !== password) {
-                req.flash('error', '密码错误');
-                return res.redirect('/login');
-            }
-            req.session.user = user;
-            //console.log(req.session.user);
-            req.flash('success', '登录成功');
-            res.redirect('/');
-        })
+    app.post('/user/login', function (req, res, next) {
+        UserRoute.loginAction(req, res, next, rid);
+    });
 
-    })
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<路由到用户路由>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //发表
     app.get('/post', checkLogin);
     app.get('/post', function (req, res) {
@@ -221,7 +133,7 @@ module.exports = function (app) {
         //当前SESSION里面的用户信息
         var currentUser = req.session.user;
         //判断一下内容不能为空
-        if (req.body.title == '' || req.body.post == '') {
+        if (req.body.title === '' || req.body.post === '') {
             req.flash('error', '内容不能为空');
             return res.redirect('/post');
         }
@@ -246,13 +158,13 @@ module.exports = function (app) {
             success: req.flash('success').toString(),
             error: req.flash('error').toString()
         })
-    })
+    });
     //上传行为
     app.post('/upload', checkLogin);
     app.post('/upload', upload.array('field1', 5), function (req, res) {
         req.flash('success', '文件保存成功');
         res.redirect('/upload');
-    })
+    });
     //退出
     app.get('/logout', function (req, res) {
         //1.清除session
@@ -261,7 +173,7 @@ module.exports = function (app) {
         req.session.user = null;
         req.flash('success', '成功退出');
         res.redirect('/');
-    })
+    });
     //点击用户名，可以看到用户发布的所有文章
     app.get('/u/:name', function (req, res) {
         var page = parseInt(req.query.p) || 1;
@@ -281,8 +193,8 @@ module.exports = function (app) {
                     title: user.name,
                     posts: posts,
                     page: page,
-                    isFirstPage: (page - 1) == 0,
-                    isLastPage: ((page - 1) * 10 + posts.length) == total,
+                    isFirstPage: (page - 1) === 0,
+                    isLastPage: ((page - 1) * 10 + posts.length) === total,
                     user: req.session.user,
                     success: req.flash('success').toString(),
                     error: req.flash('error').toString()
@@ -305,7 +217,7 @@ module.exports = function (app) {
                 error: req.flash('error').toString()
             })
         })
-    })
+    });
     //文章的留言发布
     app.post('/comment/:name/:minute/:title', function (req, res) {
         var date = new Date();
@@ -315,7 +227,7 @@ module.exports = function (app) {
             name: req.body.name,
             time: time,
             content: req.body.content
-        }
+        };
         var newCommnet = new Comment(req.params.name, req.params.minute, req.params.title, comment);
         newCommnet.save(function (err) {
             if (err) {
@@ -326,7 +238,7 @@ module.exports = function (app) {
             res.redirect('back');
 
         })
-    })
+    });
     //文章编辑
     app.get('/edit/:name/:minute/:title', checkLogin);
     app.get('/edit/:name/:minute/:title', function (req, res) {
@@ -345,7 +257,7 @@ module.exports = function (app) {
                 error: req.flash('error').toString()
             })
         })
-    })
+    });
     //文章编辑行为
     app.post('/edit/:name/:minute/:title', checkLogin);
     app.post('/edit/:name/:minute/:title', function (req, res) {
@@ -360,7 +272,7 @@ module.exports = function (app) {
                 req.flash('success', '编辑成功');
                 return res.redirect(url);
             })
-    })
+    });
     //文章删除行为
     app.get('/remove/:name/:minute/:title', checkLogin);
     app.get('/remove/:name/:minute/:title', function (req, res) {
@@ -372,7 +284,7 @@ module.exports = function (app) {
             req.flash('success', '修改成功');
             res.redirect('/');
         })
-    })
+    });
     //文章存档
     app.get('/archive', function (req, res) {
         Article.getArchive(function (err, posts) {
@@ -404,7 +316,7 @@ module.exports = function (app) {
                 error: req.flash('error').toString()
             })
         })
-    })
+    });
     //标签对应的文章集合
     app.get('/tags/:tag', function (req, res) {
         Article.getTag(req.params.tag, function (err, posts) {
@@ -420,7 +332,7 @@ module.exports = function (app) {
                 error: req.flash('error').toString()
             })
         })
-    })
+    });
     //搜索
     app.get('/search', function (req, res) {
         Article.search(req.query.keyword, function (err, posts) {
@@ -437,4 +349,4 @@ module.exports = function (app) {
             })
         })
     })
-}
+};
