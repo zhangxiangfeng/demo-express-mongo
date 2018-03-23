@@ -34,5 +34,8 @@ $> npm run dev 6000
 
 ------------
 
+`tips:`
+
+> 使用淘宝加速下载 npm config set registry https://registry.npm.taobao.org
 
 **如果感觉本资源帮到了您,给个star,鼓励一下作者吧!**
