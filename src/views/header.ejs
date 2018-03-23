@@ -11,12 +11,12 @@
 </header>
 <nav>
     <span><a href="/" title="首页">主页</a></span>
-    <span><a href="/archive">存档</a></span>
-    <span><a href="/tags">标签</a></span>
+    <span><a href="/article/archive">存档</a></span>
+    <span><a href="/article/tags">标签</a></span>
     <% if (user) { %>
-    <span><a href="/post">发布</a></span>
-    <span><a href="/upload">上传</a></span>
-    <span><a href="/logout">退出</a></span>
+    <span><a href="/article/post">发布</a></span>
+    <span><a href="/file/upload">上传</a></span>
+    <span><a href="/user/logout">退出</a></span>
     <% } else { %>
     <span><a href="/user/login" title="登录">登录</a></span>
     <span><a href="/user/reg" title="注册">注册</a></span>

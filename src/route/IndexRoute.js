@@ -9,13 +9,19 @@
 var logger;
 const local = "[IndexRoute]";
 
-//depend 3rd
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-//depend self
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend self >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var LOGGER = require("../Setting").Log4js;
 
-//model
+//<<<<<<<<<<<<<<<<<<<<<<<<depend self >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//<<<<<<<<<<<<<<<<<<<<<<<<     model >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const Article = require('../model/Article');
+
+//<<<<<<<<<<<<<<<<<<<<<<<<     model >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 var IndexRoute = {
 

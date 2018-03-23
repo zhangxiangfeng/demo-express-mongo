@@ -90,7 +90,7 @@ app.use(session({
 routes(app);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (err, req, res, next) {
     var err = new Error('Not Found 找不到');
     err.status = 404;
     next(err);

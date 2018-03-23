@@ -3,11 +3,17 @@
  * @author simon
  * @create 2018-03-21 下午2:57
  **/
+"use strict";
+var local = "[Article]";
 
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//引入mmongodb
 var mongo = require('../core/config/Db');
 
 //引入markdown插件
 var markdown = require('markdown').markdown;
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 function Article(name, title, tags, post) {
     //发布人

@@ -4,7 +4,13 @@
  * @create 2018-03-21 下午2:55
  **/
 
+"use strict";
+var local = "[Comment]";
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var mongo = require('../core/config/Db');
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //设计留言处理对象
 function Comment(name, minute, title, comment) {

@@ -142,8 +142,18 @@ var UserRoute = {
             }
             req.session.user = user;
             req.flash('success', '登录成功');
-            res.redirect('/');
+            res.redirect("/");
         })
+    },
+    logoutAction: function (req, res, next, rid) {
+        logger = LOGGER.getLogger(rid + " " + local);
+
+        //1.清除session
+        //2.给用户提示
+        //3.跳转到首页
+        req.session.user = null;
+        req.flash('success', '成功退出');
+        res.redirect('/');
     }
 };
 module.exports = UserRoute;

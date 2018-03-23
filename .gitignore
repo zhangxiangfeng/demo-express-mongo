@@ -10,4 +10,5 @@ gen
 package-lock.json
 data/*.log
 data/logs
+data/files/upload
 node_modules/

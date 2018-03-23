@@ -4,10 +4,20 @@
  * @create 2018-03-21 下午1:42
  **/
 
-// sept 1.得到db连接
+"use strict";
+var local = "[User]";
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//引入mmongodb
 var mongo = require('../core/config/Db');
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 var validate = require('../core/valid/AssertionConcern');
 require('../core/exception/ApiException');
+
+//<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 // sept 2.user的构造函数
 function User(user) {
