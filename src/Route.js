@@ -10,6 +10,7 @@
 var logger;
 var local = "[Route]";
 var rid;
+var remoteIp;
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //需要引入一个加密的模块
@@ -24,6 +25,10 @@ var multer = require('multer');
 var LOGGER = require("./Setting").Log4js;
 var uuidV4 = require('node-uuid');
 var Accessinterceptor = require('./core/interceptor/Accessinterceptor');
+const ErrorCode = require("./core/valid/ErrorCode");
+const ApiException = require("./core/exception/ApiException");
+const Constant = require("./core/utils/Constant");
+const StringUtils = require("./core/utils/StringUtils");
 
 const IndexRoute = require('./route/IndexRoute');
 const UserRoute = require('./route/UserRoute');
@@ -53,6 +58,10 @@ module.exports = function (app) {
     app.all('*', function (req, res, next) {
         //当前请求,分配uuid
         rid = uuidV4();
+        remoteIp = StringUtils.getClientIp(req);
+
+        rid = rid + " " + remoteIp;
+
         logger = LOGGER.getLogger(rid + " " + local);
         Accessinterceptor(app, rid, req, res, next);
     });
@@ -168,4 +177,21 @@ module.exports = function (app) {
     });
 
     //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑路由到上传路由↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //测试行为
+    app.get('/test', function (req, res, next) {
+        var test = {
+            name: "simon",
+            age: 18
+        };
+
+        //使用工具返回-为了打印响应对象内容
+        StringUtils.send(rid, res, test);
+    });
+
+    //其它判断为404
+    app.all('*', function (req, res, next) {
+        logger.trace("路由进入404");
+        res.type(Constant.ContentType.ApplicationJson).status(ErrorCode.HttpCode.Error404.code).send(JSON.stringify(ErrorCode.HttpCode.Error404));
+    });
 };

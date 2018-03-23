@@ -19,6 +19,10 @@ ErrorCode.HttpCode = {
         code: 403,
         msg: "[Forbidden] - 服务器拒绝执行该请求"
     },
+    Error404: {
+        code: 404,
+        msg: "[Not Found] - 资源未找到"
+    },
     Error500: {
         code: 500,
         msg: "[Http Server Error] - 由于服务端业务处理错误.导致无法完成本次请求"

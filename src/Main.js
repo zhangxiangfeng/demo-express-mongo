@@ -25,25 +25,26 @@ var MongoStore = require('connect-mongo')(session);
 
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 //引入数据库配置文件
-var settings = require('./Setting');
+var settings = require('./Setting').database;
 var routes = require('./Route');
 var LOGGER = require("./Setting").Log4js;
+const ErrorCode = require("./core/valid/ErrorCode");
+const ApiException = require("./core/exception/ApiException");
+const Constant = require("./core/utils/Constant");
+
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<model>>>>>>>>>>>>>>>>>>>>>>>>>
-
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<model>>>>>>>>>>>>>>>>>>>>>>>>>
 
 var ee = new EventEmitter();
 //给EventEmitter设置最大监听,link http://www.bkjia.com/Javascript/774972.html
 ee.setMaxListeners(10);
-settings = settings.database;
+
 
 var logger = LOGGER.getLogger(local);
 
 var app = express();
+
 var port = (function () {
     if (typeof (process.argv[2]) !== 'undefined') { // 如果输入了端口号，则提取出来
         if (isNaN(process.argv[2])) { // 如果端口号不为数字，提示格式错误
@@ -72,8 +73,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, '../data/files')));
+
 //使用flash插件
 app.use(flash());
+
 //使用session会话
 app.use(session({
     secret: settings.cookieSecret,
@@ -89,42 +92,17 @@ app.use(session({
 //将app这个应用传入到routes函数里面进行路由处理.
 routes(app);
 
-// catch 404 and forward to error handler
+
+// 捕获内部错误
 app.use(function (err, req, res, next) {
-    var err = new Error('Not Found 找不到');
-    err.status = 404;
-    next(err);
+    logger.error(err.stack);
+    res.type(Constant.ContentType.ApplicationJson).status(ErrorCode.HttpCode.Error500.code).send(JSON.stringify(ErrorCode.HttpCode.Error500))
 });
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
 
 //让整个应用启动起来
-try {
-    app.listen(port, function () {
-        logger.info('the application startup,listen:' + port);
-    });
-    module.exports = app;
-} catch (e) {
-    console.log("simon" + e.message);
-}
+app.listen(port, function () {
+    logger.trace('the application startup,listen:' + port);
+});
 
+module.exports = app;

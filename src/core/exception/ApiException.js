@@ -4,11 +4,22 @@
  * @create 2018-03-21 下午2:26
  **/
 
+"use strict";
+
+
 function ApiException(code, msg, reason) {
     this.name = "ApiException";
     this.code = code || 500;
     this.msg = msg || "Default Message";
     this.reason = reason || "Default Reason";
+    this.stack = (new Error()).stack;
+}
+
+function ApiException(httpCode) {
+    this.name = "ApiException";
+    this.code = httpCode.code || 500;
+    this.msg = httpCode.msg || "Default Message";
+    this.reason = httpCode.reason || "Default Reason";
     this.stack = (new Error()).stack;
 }
 
