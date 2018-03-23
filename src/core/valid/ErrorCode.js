@@ -33,4 +33,11 @@ ErrorCode.HttpCode = {
     }
 };
 
+ErrorCode.BizCode = {
+    Code40000: {
+        code: 40000,
+        msg: "[Bad Request] - 请求参数不合法"
+    }
+};
+
 module.exports = ErrorCode;
