@@ -31,21 +31,18 @@ Setting.logConfig = {
         },
         {                                       // normal_log 记录器
             type: "dateFile",                   // 日志文件类型，可以使用日期作为文件名的占位符
-            filename: "data/logs",
-            pattern: "-platform-yyyy-MM-dd.log",
-            alwaysIncludePattern: true,
-            category: "platform"
+            filename: "data/logs/",
+            // pattern: "platform-yyyy-MM-dd-hh:mm:ss.log",
+            pattern: "platform-yyyy-MM-dd-hh.log",
+            alwaysIncludePattern: true
         }
-    ],
-    levels: {                                   // 设置日志级别，低于该级别的将不会被打印到控制台
-        platform: "trace"
-    }
+    ]
 };
 
 LOG4JS.configure(Setting.logConfig);
 Setting.Log4js = LOG4JS;
 // 这里不在统一定制化,在路由入口出,初始化uuid即可
-// Setting.LOG4JS = LOG4JS.getLogger("normal");
+// Setting.LOG4JS = LOG4JS.getLogger("platform");
 
 //暴露Setting,给外面使用
 module.exports = Setting;
