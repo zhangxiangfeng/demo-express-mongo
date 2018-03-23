@@ -25,9 +25,11 @@
 
 ## 启动脚本
 ```
-npm install
+$> npm install
 
-npm run dev 6000
+$> 启动一下mongodb数据库,修改对应的配置Setting.js
+
+$> npm run dev 6000
 ```
 
 ------------
