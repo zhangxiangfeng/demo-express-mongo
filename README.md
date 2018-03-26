@@ -1,6 +1,6 @@
 # demo-express-mongo
 
-> Express+Mongo基于NodeJs的restful后台Api开发
+> Express+Mongo+EJS+Log4js基于NodeJs的RestFul后台Api开发
 
 ------------
 > Express官方文档  http://expressjs.com/en/4x/api.html#res.send
@@ -23,13 +23,24 @@
 │  Setting.js         基本配置
 ```
 
-## 启动脚本
+## 启动脚本-1
 ```
 $> npm install
 
 $> 启动一下mongodb数据库,修改对应的配置Setting.js
 
 $> npm run dev 6000
+```
+
+> 如果你有使用docker,docker-compose的经验,推荐一下
+
+## 启动脚本-2
+```
+$> docker-compose build;
+
+$> 启动一下mongodb数据库,修改对应的配置Setting.js
+
+$> docker-compose up -d;
 ```
 
 ------------

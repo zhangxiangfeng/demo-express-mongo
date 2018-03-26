@@ -32,6 +32,7 @@ var routes = require('./Route');
 var LOGGER = require("./Setting").Log4js;
 const ErrorCode = require("./core/valid/ErrorCode");
 const ApiException = require("./core/exception/ApiException");
+require("./core/utils/StringUtils");
 const Constant = require("./core/utils/Constant");
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -77,13 +78,13 @@ app.use(express.static(path.join(__dirname, '../data/files')));
 //使用flash插件
 app.use(flash());
 
-//使用session会话
+//使用session会话,使用mongo存储
 app.use(session({
     secret: settings.cookieSecret,
     key: settings.db,
     cookies: {maxAge: 1000 * 60 * 60 * 24 * 30},
     store: new MongoStore({
-        url: 'mongodb://localhost/local'
+        url: 'mongodb://{0}:{1}/{2}'.format(settings.host, settings.port, settings.db)
     }),
     resave: false,
     saveUninitialized: true

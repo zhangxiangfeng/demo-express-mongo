@@ -1,7 +1,11 @@
-FROM node:9.9.0
+FROM node:9.9.0-alpine
 
-RUN mkdir -p /app/data
+MAINTAINER 812135023@qq.com
 
-ADD ./* /app/
+RUN mkdir -p /app
+
+ADD . /app/
+
+WORKDIR /app
 
 ENTRYPOINT npm run dev 3000

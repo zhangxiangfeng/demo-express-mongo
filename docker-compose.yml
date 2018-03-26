@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+    local_demo-express-mongo:
+         build: .
+         container_name: local_demo-express-mongo
+         image: "demo-express-mongo:1.0"
+         ports:
+           - 3000:3000
+         restart: on-failure
+         volumes:
+           - /etc/localtime:/etc/localtime
+#         networks:
+#           - huoying01-network
+#networks:
+#  huoying01-network:
+#    external:
+#      name : huoying01-network
