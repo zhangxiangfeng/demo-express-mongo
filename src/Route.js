@@ -182,16 +182,18 @@ module.exports = function (app) {
     app.get('/test', function (req, res, next) {
         var test = {
             name: "simon",
-            age: 18
+            age: 24
         };
 
         //使用工具返回-为了打印响应对象内容
-        StringUtils.send(rid, res, test);
+        StringUtils.send(rid, res, test, Constant.ContentType.ApplicationJson);
     });
+
 
     //其它判断为404
     app.all('*', function (req, res, next) {
-        logger.trace("路由进入404");
-        res.type(Constant.ContentType.ApplicationJson).status(ErrorCode.HttpCode.Error404.code).send(JSON.stringify(ErrorCode.HttpCode.Error404));
+        logger.warn("route into 404");
+        StringUtils.errorSend(rid, ErrorCode.HttpCode.Error404.code, res, ErrorCode.HttpCode.Error404);
+        // res.type(Constant.ContentType.ApplicationJson).status(ErrorCode.HttpCode.Error404.code).send(JSON.stringify(ErrorCode.HttpCode.Error404));
     });
 };

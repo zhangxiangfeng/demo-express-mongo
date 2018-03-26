@@ -9,6 +9,9 @@
 const local = "[StringUtils]";
 var logger;
 
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const extend = require('extend');
+//<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const Constant = require("./Constant");
@@ -36,34 +39,74 @@ var StringUtils = {
 
     /**
      *
+     * X-Real-IP: 101.227.104.62
+     * X-Scheme: http
+     * X-Forwarded-For: 101.227.104.62
      * 这里配合前端服务器设置nginx代理远程ip
      * proxy_set_header X-Real-IP $remote_addr;
      * proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
      * */
     getClientIp: function (req) {
-        return req.headers["X-Forwarded-For"] ||
-            req.connection.remoteAddress ||
-            req.socket.remoteAddress ||
-            req.connection.socket.remoteAddress;
+        return req.headers["x-real-ip"] ||
+            req.headers["x-forwarded-for"];
     },
     /**
      *
      *发送数据到前端
      * @param res  响应对象
-     * @param data 发送的数据
+     * @param data 发送的数据对象
      * @param contentType 类型
      * */
     send: function (rid, res, data, contentType) {
-        data = JSON.stringify(data);
+        // data = JSON.stringify(data);
 
         logger = LOGGER.getLogger(rid + " " + local);
 
-        logger.trace("response body: {0}".format(data));
-        logger.trace("Access End >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        let dataStr = JSON.stringify(data);
 
-        contentType = Constant.ContentType.ApplicationJson || contentType;
+        contentType = contentType || Constant.ContentType.ApplicationJson;
 
-        res.type(contentType).send(data);
+
+        //从f0099719-9d9f-4c8a-9bb1-ade29c512c4d ::1 截取rid
+        let realRid = rid.substr(0, rid.indexOf(" "));
+
+        res.header("Rid", realRid);
+        res.header("Content-Length", dataStr.length);
+        res.header("Content-Type", "application/json;charset=utf-8");
+
+
+        logger.trace("response body: {0}".format(dataStr));
+        logger.trace("Access End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+
+        res.type(contentType).status(200).json(data);
+    },
+    /**
+     *
+     *发送数据到前端
+     * @param res  响应对象
+     * @param data 发送的数据对象
+     * @param contentType 类型
+     * */
+    errorSend: function (rid, code, res, data, contentType) {
+        // data = JSON.stringify(data);
+
+        logger = LOGGER.getLogger(rid + " " + local);
+
+        let dataStr = JSON.stringify(data);
+
+        contentType = contentType || Constant.ContentType.ApplicationJson;
+
+        //从f0099719-9d9f-4c8a-9bb1-ade29c512c4d ::1 截取rid
+        let realRid = rid.substr(0, rid.indexOf(" "));
+
+        res.header("Rid", realRid);
+        res.header("Content-Length", dataStr.length);
+        res.header("Content-Type", "application/json;charset=utf-8");
+
+        logger.trace("response body: {0}".format(dataStr));
+        logger.trace("Access End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+
+        res.type(contentType).status(code).json(data);
     }
 };
 module.exports = StringUtils;

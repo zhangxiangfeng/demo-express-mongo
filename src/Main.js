@@ -34,7 +34,7 @@ const ErrorCode = require("./core/valid/ErrorCode");
 const ApiException = require("./core/exception/ApiException");
 require("./core/utils/StringUtils");
 const Constant = require("./core/utils/Constant");
-
+const StringUtils = require("./core/utils/StringUtils");
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 var ee = new EventEmitter();
@@ -97,7 +97,7 @@ routes(app);
 // 捕获内部错误
 app.use(function (err, req, res, next) {
     logger.error(err.stack);
-    res.type(Constant.ContentType.ApplicationJson).status(ErrorCode.HttpCode.Error500.code).send(JSON.stringify(ErrorCode.HttpCode.Error500))
+    res.type(Constant.ContentType.ApplicationJson).status(ErrorCode.HttpCode.Error500.code).json(ErrorCode.HttpCode.Error500)
 });
 
 
