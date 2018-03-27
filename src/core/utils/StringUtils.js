@@ -35,10 +35,6 @@ String.prototype.isNull = function () {
     return this === "" || this === undefined || this == null;
 };
 
-Object.prototype.toString = function () {
-    return JSON.stringify(this);
-};
-
 var StringUtils = {
 
     /**
@@ -52,7 +48,8 @@ var StringUtils = {
      * */
     getClientIp: function (req) {
         return req.headers["x-real-ip"] ||
-            req.headers["x-forwarded-for"];
+            req.headers["x-forwarded-for"] ||
+            req.socket.remoteAddress;
     },
     /**
      *
@@ -67,7 +64,8 @@ var StringUtils = {
         logger = LOGGER.getLogger(rid + " " + local);
 
         let dataStr = JSON.stringify(data);
-
+        dataStr = dataStr ? dataStr : "";
+        let contentLength = dataStr ? dataStr.length : 0;
         contentType = contentType || Constant.ContentType.ApplicationJson;
 
 
@@ -75,7 +73,7 @@ var StringUtils = {
         let realRid = rid.substr(0, rid.indexOf(" "));
 
         res.header("Rid", realRid);
-        res.header("Content-Length", dataStr.length);
+        res.header("Content-Length", contentLength);
         res.header("Content-Type", "application/json;charset=utf-8");
 
 

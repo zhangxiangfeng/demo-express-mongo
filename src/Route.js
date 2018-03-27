@@ -35,7 +35,7 @@ const UserRoute = require('./route/UserRoute');
 const ArticleRoute = require('./route/ArticleRoute');
 const UploadRoute = require('./route/UploadRoute');
 const CommentRoute = require('./route/CommentRoute');
-// const NavInfoRoute = require('./route/NavInfoRoute');
+const NavInfoRoute = require('./route/NavInfoRoute');
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -181,16 +181,16 @@ module.exports = function (app) {
 
     //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓路由到导航路由↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    // //上传页面
-    // app.get('/nav/list', function (req, res, next) {
-    //     var result = NavInfoRoute.index(req, res, next, rid);
-    //     StringUtils.send(rid, res, result);
-    // });
-    //
-    // //上传行为
-    // app.post('/nav/save', function (req, res, next) {
-    //
-    // });
+    //导航首页
+    app.get('/nav/list', function (req, res, next) {
+        var result = NavInfoRoute.index(req, res, next, rid);
+        StringUtils.send(rid, res, result);
+    });
+
+    //导航保存
+    app.post('/nav/save', function (req, res, next) {
+        NavInfoRoute.save(req, res, next, rid);
+    });
 
     //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑路由到导航路由↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 

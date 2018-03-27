@@ -23,11 +23,11 @@ var errorCode = require("../core/valid/ErrorCode");
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 // sept 2.NavInfo的构造函数
-function NavInfo() {
-}
-
 
 function NavInfo(user) {
+    if (user == null || user === undefined) {
+        return this;
+    }
     this.imgUrl = user.imgUrl;
     this.name = user.name;
     this.date = user.date;
@@ -67,12 +67,12 @@ NavInfo.prototype.save = function (callback) {
                 return callback(err);
             }
             //将用户的信息存放到users集合当中去
-            collection.insert(navInfo, {safe: true}, function (err, user) {
+            collection.insert(navInfo, {safe: true}, function (err, info) {
                 mongo.close();
                 if (err) {
                     return callback(err);
                 }
-                return callback(navInfo[0]);//返回注册成功的用户名.
+                return callback(info);//返回注册成功的用户名.
             })
         })
     })
@@ -101,8 +101,6 @@ NavInfo.prototype.list = function (page, callback) {
                     skip: (page - 1) * 1000,
                     //pageSize 理解为步长
                     limit: 1000
-                }).sort({
-                    name: -1
                 }).toArray(function (err, docs) {
                     mongo.close();
                     if (err) {

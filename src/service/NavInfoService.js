@@ -32,14 +32,24 @@ var navInfoService = {
     list: function (navInfo, rid, page) {
         logger = LOGGER.getLogger(rid + " " + local);
 
-        logger.trace("navInfo.list(navInfo:{0},rid)".format(navInfo.toString()));
+        logger.trace("navInfo.list(navInfo:{0},rid)".format(JSON.stringify(navInfo)));
 
         //sept 1.查询列表
-        navInfo.list(page, function (err, navInfos, total) {
+        return navInfo.list(page, function (err, navInfos, total) {
             return {
                 navInfos: navInfos,
                 total: total
             };
+        });
+    },
+    save: function (navInfo, rid) {
+        logger = LOGGER.getLogger(rid + " " + local);
+
+        logger.trace("navInfo.save(navInfo:{0},rid)".format(JSON.stringify(navInfo)));
+
+        //sept 1.保存
+        return navInfo.save(function (navInfo) {
+            return navInfo;
         });
     }
 };

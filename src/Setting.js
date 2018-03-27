@@ -21,7 +21,7 @@ Setting.database = {
     //主机名
     host: '127.0.0.1',
     //端口号
-    port: 27021
+    port: 27018
 };
 
 Setting.logConfig = {
