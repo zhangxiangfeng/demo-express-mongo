@@ -40,7 +40,7 @@ var upload = multer({storage: storage, size: 10225});
 
 var UploadRoute = {
     //上传页面
-    upload: function (req, res, rid) {
+    upload: function (req, res, next, rid) {
         logger = LOGGER.getLogger(rid + " " + local);
 
         if (!req.session.user) {
@@ -56,7 +56,7 @@ var UploadRoute = {
         })
     },
     //上传行为
-    uploadAction: function (req, res, rid) {
+    uploadAction: function (req, res, next, rid) {
         logger = LOGGER.getLogger(rid + " " + local);
 
         if (!req.session.user) {

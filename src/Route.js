@@ -35,6 +35,7 @@ const UserRoute = require('./route/UserRoute');
 const ArticleRoute = require('./route/ArticleRoute');
 const UploadRoute = require('./route/UploadRoute');
 const CommentRoute = require('./route/CommentRoute');
+// const NavInfoRoute = require('./route/NavInfoRoute');
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -168,15 +169,30 @@ module.exports = function (app) {
 
     //上传页面
     app.get('/file/upload', function (req, res, next) {
-        UploadRoute.upload(req, res, next);
+        UploadRoute.upload(req, res, next, rid);
     });
 
     //上传行为
     app.post('/file/upload', upload.array('fileName', 5), function (req, res, next) {
-        UploadRoute.uploadAction(req, res, next);
+        UploadRoute.uploadAction(req, res, next, rid);
     });
 
     //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑路由到上传路由↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓路由到导航路由↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    // //上传页面
+    // app.get('/nav/list', function (req, res, next) {
+    //     var result = NavInfoRoute.index(req, res, next, rid);
+    //     StringUtils.send(rid, res, result);
+    // });
+    //
+    // //上传行为
+    // app.post('/nav/save', function (req, res, next) {
+    //
+    // });
+
+    //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑路由到导航路由↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //测试行为
     app.get('/test', function (req, res, next) {

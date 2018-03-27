@@ -35,6 +35,10 @@ String.prototype.isNull = function () {
     return this === "" || this === undefined || this == null;
 };
 
+Object.prototype.toString = function () {
+    return JSON.stringify(this);
+};
+
 var StringUtils = {
 
     /**

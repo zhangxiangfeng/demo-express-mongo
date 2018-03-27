@@ -19,9 +19,9 @@ Setting.database = {
     //数据库的名称
     db: 'local',
     //主机名
-    host: '192.168.31.110',
+    host: '127.0.0.1',
     //端口号
-    port: 27018
+    port: 27021
 };
 
 Setting.logConfig = {

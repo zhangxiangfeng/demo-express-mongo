@@ -116,7 +116,7 @@ Article.getTen = function (name, page, callback) {
             })
         })
     })
-}
+};
 //可以根据用户名、发布时间、文章标题来查询某一篇具体的文章
 Article.getOne = function (name, minute, title, callback) {
     mongo.open(function (err, db) {
