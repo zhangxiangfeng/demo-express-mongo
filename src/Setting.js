@@ -15,13 +15,13 @@ var Setting = {};
 
 Setting.database = {
     //加密的参数
-    cookieSecret: 'lzy',
+    cookieSecret: 'simon',
     //数据库的名称
     db: 'local',
     //主机名
-    host: '127.0.0.1',
+    host: '172.18.0.4',
     //端口号
-    port: 27018
+    port: 27017
 };
 
 Setting.logConfig = {
