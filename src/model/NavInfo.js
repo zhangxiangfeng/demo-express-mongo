@@ -77,7 +77,7 @@ NavInfo.prototype.save = function (callback) {
         })
     })
 };
-NavInfo.prototype.list = function (page, callback) {
+NavInfo.list = function (page, callback) {
     mongo.open(function (err, db) {
         if (err) {
             return callback(err);
@@ -90,7 +90,7 @@ NavInfo.prototype.list = function (page, callback) {
 
             //查询条件对象
             var query = {};
-            if (page.isNull()) {
+            if (page != null || page === undefined) {
                 page = 1;
             }
             //查询

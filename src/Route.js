@@ -183,8 +183,7 @@ module.exports = function (app) {
 
     //导航首页
     app.get('/nav/list', function (req, res, next) {
-        var result = NavInfoRoute.index(req, res, next, rid);
-        StringUtils.send(rid, res, result);
+        NavInfoRoute.index(req, res, next, rid);
     });
 
     //导航保存

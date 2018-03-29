@@ -7,8 +7,8 @@
 "use strict";
 
 //全局变量
-var logger;
-var local = "[NavInfoRoute]";
+let logger;
+let local = "[NavInfoRoute]";
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend 3rd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -16,13 +16,12 @@ var local = "[NavInfoRoute]";
 
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-var LOGGER = require("../Setting").Log4js;
+let LOGGER = require("../Setting").Log4js;
 const StringUtils = require("../core/utils/StringUtils");
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<model>>>>>>>>>>>>>>>>>>>>>>>>>
-const NavInfoService = require('../service/NavInfoService');
 const NavInfo = require('../model/NavInfo');
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<model>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -32,17 +31,27 @@ let NavInfoRoute = {
         logger = LOGGER.getLogger(rid + " " + local);
 
         let page = parseInt(req.query.p) || 1;
-        return NavInfoService.list(new NavInfo(), rid, page);
+        // var result = NavInfoService.list(new NavInfo(), rid, page);
+
+        logger.trace("NavInfoRoute.index");
+
+        //sept 1.查询列表
+        NavInfo.list(page, function (err, navInfos, total) {
+            let result = {
+                navInfos: navInfos,
+                total: total
+            };
+            StringUtils.send(rid, res, result);
+        });
     },
     //存储
     save: function (req, res, next, rid) {
         logger = LOGGER.getLogger(rid + " " + local);
         let navInfo = new NavInfo(req.body);
-        var result = NavInfoService.save(navInfo, rid);
 
-        StringUtils.send(rid, res, result || {
-            msg: "Ok",
-            code: 200
+        //sept 1.保存
+        navInfo.save(function (navInfo) {
+            StringUtils.send(rid, res, navInfo);
         });
     }
 };
