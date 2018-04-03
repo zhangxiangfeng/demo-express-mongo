@@ -8,6 +8,6 @@
 out
 gen
 package-lock.json
-data/*.log
+data/logs/*.log
 data/files/upload
 node_modules/

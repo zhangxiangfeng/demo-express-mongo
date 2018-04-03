@@ -100,7 +100,8 @@ NavInfo.list = function (page, callback) {
                     //根据当前的页数算出每页开始的位置pageStart
                     skip: (page - 1) * 1000,
                     //pageSize 理解为步长
-                    limit: 1000
+                    limit: 1000,
+                    sort: {'date': 1}
                 }).toArray(function (err, docs) {
                     mongo.close();
                     if (err) {
