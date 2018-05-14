@@ -19,7 +19,7 @@ Setting.database = {
     //数据库的名称
     db: 'local',
     //主机名
-    host: '172.18.0.4',
+    host: 'mongo',
     //端口号
     port: 27017
 };
