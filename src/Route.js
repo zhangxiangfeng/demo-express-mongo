@@ -36,6 +36,7 @@ const ArticleRoute = require('./route/ArticleRoute');
 const UploadRoute = require('./route/UploadRoute');
 const CommentRoute = require('./route/CommentRoute');
 const NavInfoRoute = require('./route/NavInfoRoute');
+const SecretKeyRoute = require('./route/SecretKeyRoute');
 
 //<<<<<<<<<<<<<<<<<<<<<<<<depend self>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -192,6 +193,20 @@ module.exports = function (app) {
     });
 
     //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑路由到导航路由↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓路由到加密解密路由↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    //加密
+    app.post('/encrypt/encode', function (req, res, next) {
+        SecretKeyRoute.encode(req, res, next, rid);
+    });
+
+    //解密
+    app.post('/encrypt/decode', function (req, res, next) {
+        SecretKeyRoute.decode(req, res, next, rid);
+    });
+
+    //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑路由到加密解密路由↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //测试行为
     app.get('/test', function (req, res, next) {
