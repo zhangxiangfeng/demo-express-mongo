@@ -19,9 +19,9 @@ Setting.database = {
     //数据库的名称
     db: 'local',
     //主机名
-    host: 'localhost',
+    host: 'mongo-01.dev-01.openread.cn',
     //端口号
-    port: 32769
+    port: 1000
 };
 
 Setting.logConfig = {
